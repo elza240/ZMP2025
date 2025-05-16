@@ -6,54 +6,62 @@
 #include <iostream>
 using namespace std;
 
-
-void merge(int tab[],int l,int s, int p){
-    int dl_l=s-l+1;
-    int dl_p=p-s;
-
-    int* L=new int[dl_l];
-    int* P=new int[dl_p];
-
-    for (int i=0;i<dl_l;i++){
-        L[i]=tab[l+i];
+void merge(int T[], int l, int m, int r){
+    int nL=m-l+1;
+    int nR=r-m;
+    int L[nL];
+    int R[nR];
+    for (int i=0;i<nL;i++){
+        L[i]=T[l+i];
     }
-    for (int j=0;j<dl_p;j++){
-        P[j]=tab[s+1+j];
+    for (int i=0;i<nR;i++){
+        R[i]=T[m+1+i];
     }
-
+    //tworzymy tablice zastepcze do ktorych wpisuejmy wartosci
     int i=0;
     int j=0;
     int k=l;
-
-    while (i<dl_l && j<dl_p){
-        if (L[i]<=P[j]){
-            tab[k++]=L[i++];
+    while(i<nL&&j<nR){
+        if(L[i]<=R[j]){
+            T[k]=L[i];
+            i++;
         }
         else{
-            tab[k++]=P[j++];
+            T[k]=R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i<nL){
+        T[k]=L[i];
+        i++;
+        k++;
+    }
+    while (j<nR){
+        T[k]=R[j];
+        j++;
+        k++;
+    }
+    //robimy zmienne pomocnicze, i dla lewej tablicy, j dla prawej, k jako odnosnik do T
+    //jesli cos na lewej jest wieksze od tego na prawej to dajemy go pozniej 
+    //iterujemy po tych indeksach na ktorych bylo cos mniejszego
+    //jak sie skoncza indeksy to spisujemy tak jak jest
+
+}//funkcja scala dwie posortowane tablice
+
+void mergesort(int T[], int n){
+    for (int k=1;k<=n;k=k*2){
+        for (int l=0;l<n-1;l=l+k*2){
+            int m=min(l+k*2,n-1);
+            int r=min(l+k*2-1,n-1);
+            merge(T,l,m,r);
         }
     }
-
-    while (i<dl_l){
-        tab[k++]=L[i++];
-    }
-
-    while (j<dl_p){
-        tab[k++]=P[j++];
-    }
-
-    delete[] L;
-    delete[] P;
-}
-
-void mergesort(int tab[], int l, int p){
-    if (l>=p) return;
-    int s=l+(p-l)/2;
-    mergesort(tab,l,s);
-    mergesort(tab,s+1,p);
-    merge(tab,l,s,p);
-
-}
+}//sortujemy pojedyncze tablice
+//mamy tablice T o elementach liczbie n, sortujemy tablice po dlugosci tablicy k, k się mnoży przez 2 bo tak z polecenia wynika
+//iterujemy po tablicach zaczynajacych sie w l, srodek w m, prawy kraniec w r
+//iterujemy po l, r i m jest juz sortowane, pozniej laczymy w tablice wieksza
 
 int main (){
     int n;
@@ -62,7 +70,7 @@ int main (){
     for (int i=0;i<n;i++){
         cin >> T[i];
     }
-    mergesort(T,0,n-1);
+    mergesort(T,n);
     
     for (int i = 0; i < n; ++i)
         cout << T[i] << " ";
