@@ -21,6 +21,11 @@ public:
         model = b;
         rok_produkcji = c; 
     }
+    void show(){
+        cout<<endl<<"Dane samochodu:\n";
+        cout<<"Marka: " <<marka<<endl;
+        cout<<"Model: "<<model<<endl;
+    }
 };
 
 class Samochod:protected Pojazd{
